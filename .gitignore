@@ -14,3 +14,9 @@ Thumbs.db
 *~
 .vscode/
 .idea/
+
+# 运行时生成的文件
+camera_photos/
+camera_mapping.json
+camera_mapping.md
+99-so101-cameras.rules

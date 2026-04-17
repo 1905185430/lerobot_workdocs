@@ -1,0 +1,9 @@
+# 相机名称预设配置
+# 每行一个名称，按顺序对应选择编号（0, 1, 2, ...）
+# 井号开头表示注释，会被忽略
+
+laptop_webcam
+so101_left_top
+so101_right_top
+so101_left_wrist
+so101_right_wrist
