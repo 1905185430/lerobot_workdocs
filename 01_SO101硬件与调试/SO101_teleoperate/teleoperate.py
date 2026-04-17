@@ -1,3 +1,7 @@
+# LeRobot 版本要求：lerobot (官方 v0.5.1, Python 3.12)
+#   import 路径 so_follower / so_leader 仅在 v0.5.1 中存在
+#   lerobot-seeed (v0.4.4) 使用旧路径 so101_follower / so101_leader，不兼容本脚本
+# 运行环境：conda activate lerobot
 from lerobot.teleoperators.so_leader import SO101LeaderConfig, SO101Leader
 from lerobot.robots.so_follower import SO101FollowerConfig, SO101Follower
 import os
