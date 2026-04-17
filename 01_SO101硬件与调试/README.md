@@ -27,24 +27,38 @@
 ```
 01_SO101硬件与调试/
 │
-├── README.md                          ← 本文档（系统手册）
+├── README.md                              ← 本文档（系统手册）
 │
-├── SO101_calibrate/                   # 校准与相机工具
-│   ├── so101_cong_left.py             ← 左从臂校准 (Python版)
-│   ├── so101_cong_right.py            ← 右从臂校准 (Python版)
-│   ├── so101_zhu_left.py              ← 左主臂校准 (Python版)
-│   ├── so101_zhu_right.py             ← 右主臂校准 (Python版)
-│   ├── camera_identifier.py           ← 相机识别 GUI
-│   ├── camera_names.txt               ← 相机预设名称
-│   ├── USB端口映射表.md                ← 端口映射参考
-│   ├── camera_mapping.json            (运行生成)
-│   ├── camera_mapping.md              (运行生成)
-│   └── 99-so101-cameras.rules         (运行生成)
+├── 01_校准/                               # 机械臂校准
+│   ├── calibrate_follower_left.py         ← 左从臂校准
+│   ├── calibrate_follower_right.py        ← 右从臂校准
+│   ├── calibrate_leader_left.py           ← 左主臂校准
+│   ├── calibrate_leader_right.py          ← 右主臂校准
+│   ├── USB端口映射表.md                    ← 端口映射参考
+│   └── SO101工作总结_20260417.md           ← 工作日志
 │
-├── SO101_teleoperate/                 # 遥操作
-│   └── teleoperate.py                 ← 三模式遥操作 (Python版)
+├── 02_遥操作/                             # 遥操作程序
+│   ├── teleoperate.py                     ← 三模式遥操作（无摄像头）
+│   ├── teleoperate_2cam.py                ← 双摄像头遥操作
+│   └── teleoperate_3cam.py                ← 三摄像头遥操作
 │
-├── calibration/                       # 校准数据备份
+├── 03_数据采集/                           # 数据录制
+│   ├── record_so101_2cam.py               ← 双摄像头数据采集
+│   └── record_so101_3cam.py               ← 三摄像头数据采集
+│
+├── 04_摄像头工具/                         # 摄像头识别与调试
+│   ├── camera_identifier.py               ← 相机识别 GUI
+│   ├── camera_capture.py                  ← 摄像头画面采集
+│   ├── camera_names.txt                   ← 相机预设名称
+│   └── outputs/                           ← 采集输出样图
+│
+├── 05_故障修复记录/
+│   └── SO101通信失败修复记录.md            ← CH9101F 波特率修复
+│
+├── 06_环境安装记录/
+│   └── Seeed版LeRobot安装记录.md           ← Seeed fork 安装记录
+│
+├── calibration/                           # 校准数据备份（可跨机器迁移）
 │   ├── robots/so_follower/
 │   │   ├── bimanual_follower_left.json
 │   │   └── bimanual_follower_right.json
@@ -52,8 +66,10 @@
 │       ├── bimanual_leader_left.json
 │       └── bimanual_leader_right.json
 │
-└── fix_and_test/                      # 修复记录
-    └── SO101通信失败修复记录.md
+└── archive/                               # 历史文档归档
+    ├── SO101双臂遥操作部署文档.md
+    ├── SO101遥操作与校准程序使用说明.md
+    └── SO101遥操作运行文档.md
 ```
 
 ### 1.2 操作方式总览
@@ -66,7 +82,7 @@
 | 单臂遥操作 | `lerobot-teleoperate` | `python teleoperate.py` 模式1 |
 | 双臂遥操作 | `lerobot-teleoperate --robot.type bi_so_follower` | `python teleoperate.py` 模式3 |
 | 一对多遥操作 | 不支持 | `python teleoperate.py` 模式2 |
-| 数据录制 | `lerobot-record` | 暂不支持 |
+| 数据录制 | `lerobot-record` | `python record_so101_2cam.py` |
 | 数据回放 | `lerobot-replay` | 暂不支持 |
 | 相机识别 | 手动 `ls /dev/video*` | `python camera_identifier.py` GUI |
 
@@ -142,7 +158,7 @@ sed -i 's/DEFAULT_BAUDRATE = 1_000_000/DEFAULT_BAUDRATE = 500_000/' "$FEETECH_PA
 
 > ⚠️ 每次 pip install / git pull / conda update lerobot 后都会覆盖此修改，需重新执行！
 
-详细排查过程见 [fix_and_test/SO101通信失败修复记录.md](fix_and_test/SO101通信失败修复记录.md)。
+详细排查过程见 [05_故障修复记录/SO101通信失败修复记录.md](05_故障修复记录/SO101通信失败修复记录.md)。
 
 ### 3.3 串口权限
 
@@ -179,12 +195,12 @@ Python版脚本内置了 `sudo chmod 666`，运行时会自动申请权限。
 conda activate lerobot
 
 # 从臂
-python SO101_calibrate/so101_cong_left.py      # 左从臂
-python SO101_calibrate/so101_cong_right.py     # 右从臂
+python 01_校准/calibrate_follower_left.py      # 左从臂
+python 01_校准/calibrate_follower_right.py     # 右从臂
 
 # 主臂
-python SO101_calibrate/so101_zhu_left.py       # 左主臂
-python SO101_calibrate/so101_zhu_right.py      # 右主臂
+python 01_校准/calibrate_leader_left.py       # 左主臂
+python 01_校准/calibrate_leader_right.py      # 右主臂
 ```
 
 每个脚本执行流程：
@@ -257,7 +273,7 @@ mkdir -p ~/.cache/huggingface/lerobot/calibration && cd $_ && tar xzf ~/so101_ca
 
 ```bash
 conda activate lerobot
-python SO101_teleoperate/teleoperate.py
+python 02_遥操作/teleoperate.py
 ```
 
 ```
@@ -384,7 +400,7 @@ lerobot-teleoperate \
 
 ```bash
 pip install PySimpleGUI opencv-python    # 首次安装依赖
-python SO101_calibrate/camera_identifier.py
+python 04_摄像头工具/camera_identifier.py
 ```
 
 功能：
@@ -401,7 +417,7 @@ python SO101_calibrate/camera_identifier.py
 ### 6.2 安装 udev 规则
 
 ```bash
-sudo cp SO101_calibrate/99-so101-cameras.rules /etc/udev/rules.d/
+sudo cp 04_摄像头工具/99-so101-cameras.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
@@ -563,23 +579,23 @@ lerobot-teleoperate CLI
 conda activate lerobot
 
 # 2. 校准（首次使用）
-python SO101_calibrate/so101_cong_left.py
-python SO101_calibrate/so101_cong_right.py
-python SO101_calibrate/so101_zhu_left.py
-python SO101_calibrate/so101_zhu_right.py
+python 01_校准/calibrate_follower_left.py
+python 01_校准/calibrate_follower_right.py
+python 01_校准/calibrate_leader_left.py
+python 01_校准/calibrate_leader_right.py
 
 # 3. 遥操作
-python SO101_teleoperate/teleoperate.py
+python 02_遥操作/teleoperate.py
 
 # 4. 相机识别（可选）
-python SO101_calibrate/camera_identifier.py
+python 04_摄像头工具/camera_identifier.py
 ```
 
 ### 9.4 参考资料
 
-- [SO101通信失败修复记录](fix_and_test/SO101通信失败修复记录.md) — CH9101F 波特率问题完整排查
-- [Seeed版LeRobot安装记录](Seeed版LeRobot安装记录.md) — Seeed fork 0.4.3 安装与对比
-- [USB端口映射表](SO101_calibrate/USB端口映射表.md) — by-id 端口详细映射
-- [SO101工作总结](SO101_calibrate/SO101工作总结_20260417.md) — 2026-04-17 工作日志
+- [SO101通信失败修复记录](05_故障修复记录/SO101通信失败修复记录.md) — CH9101F 波特率问题完整排查
+- [Seeed版LeRobot安装记录](06_环境安装记录/Seeed版LeRobot安装记录.md) — Seeed fork 0.4.3 安装与对比
+- [USB端口映射表](01_校准/USB端口映射表.md) — by-id 端口详细映射
+- [SO101工作总结](01_校准/SO101工作总结_20260417.md) — 2026-04-17 工作日志
 - [HuggingFace LeRobot SO101 文档](https://huggingface.co/docs/lerobot/so101)
 - [HuggingFace LeRobot GitHub](https://github.com/huggingface/lerobot)

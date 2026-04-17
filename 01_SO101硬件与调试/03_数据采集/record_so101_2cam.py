@@ -5,11 +5,12 @@ SO101 单臂数据采集脚本（带双摄像头）
 使用方法：
   1. 确保机械臂已通电、USB已连接
   2. conda activate lerobot
-  3. python record_so101.py
+  3. python record_so101_2cam.py                    # 默认：冲突时自动加时间戳
+     python record_so101_2cam.py --name my_dataset  # 自定义数据集名
+     python record_so101_2cam.py --overwrite         # 覆盖已有数据集
 
 注意：
-  - 如果上次采集中途退出，需删除旧数据集目录再运行：
-    rm -rf ~/.cache/huggingface/lerobot/Ready321/so101_grab_redcube
+  - 数据集目录冲突时会自动追加时间戳，或用 --overwrite 覆盖
 
 键盘控制：
   右箭头  → 提前结束当前 episode
@@ -18,6 +19,17 @@ SO101 单臂数据采集脚本（带双摄像头）
 """
 
 import os
+import sys
+import shutil
+from datetime import datetime
+from pathlib import Path
+
+# ==================== 版本要求 ====================
+# LeRobot 版本要求：lerobot (官方 v0.5.1, Python 3.12)
+#   import 路径 so_follower / so_leader 仅在 v0.5.1 中存在
+#   lerobot-seeed (v0.4.4) 使用旧路径 so101_follower / so101_leader，不兼容本脚本
+# 运行环境：conda activate lerobot
+# =====================================================================
 from lerobot.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 from lerobot.datasets.feature_utils import hw_to_dataset_features
@@ -80,7 +92,52 @@ dataset_features = {**action_features, **obs_features}
 print(f"action_features:   {action_features}")
 print(f"obs_features:      {obs_features}")
 
-# 创建数据集
+# 创建数据集（含重复检测）
+LEROBOT_CACHE_ROOT = Path.home() / ".cache" / "huggingface" / "lerobot"
+
+# 解析命令行参数
+custom_name = None
+overwrite = False
+args = sys.argv[1:]
+i = 0
+while i < len(args):
+    if args[i] == "--name" and i + 1 < len(args):
+        custom_name = args[i + 1]
+        i += 2
+    elif args[i] == "--overwrite":
+        overwrite = True
+        i += 1
+    else:
+        print(f"未知参数: {args[i]}")
+        print("用法: python record_so101_2cam.py [--name <数据集名>] [--overwrite]")
+        sys.exit(1)
+
+# 确定最终的 DATASET_REPO_ID
+if custom_name:
+    username = DATASET_REPO_ID.split("/")[0]
+    DATASET_REPO_ID = f"{username}/{custom_name}"
+
+dataset_local_path = LEROBOT_CACHE_ROOT / DATASET_REPO_ID
+
+if dataset_local_path.exists():
+    if overwrite:
+        print(f"[覆盖模式] 删除已有数据集：{dataset_local_path}")
+        shutil.rmtree(dataset_local_path)
+    else:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        username = DATASET_REPO_ID.split("/")[0]
+        base_name = DATASET_REPO_ID.split("/")[1]
+        new_name = f"{base_name}_{timestamp}"
+        DATASET_REPO_ID = f"{username}/{new_name}"
+        dataset_local_path = LEROBOT_CACHE_ROOT / DATASET_REPO_ID
+        print(f"[自动重命名] 数据集目录已存在，新数据集：{DATASET_REPO_ID}")
+        print(f"  旧目录保留在：{LEROBOT_CACHE_ROOT / (username + '/' + base_name)}")
+        print(f"  如需覆盖旧数据，请使用 --overwrite 参数重新运行")
+else:
+    print(f"[新建] 数据集将创建在：{dataset_local_path}")
+
+print(f"最终 DATASET_REPO_ID = {DATASET_REPO_ID}")
+
 dataset = LeRobotDataset.create(
     repo_id=DATASET_REPO_ID,
     fps=FPS,
