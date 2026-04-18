@@ -1,0 +1,204 @@
+{
+  "main": {
+    "id": "a4c530a73e109f32",
+    "type": "split",
+    "children": [
+      {
+        "id": "89c587e2bd9b6603",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "30afe7bf17b32312",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "entities/lerobot.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "lerobot"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5ef3fe55ee1121cf",
+    "type": "split",
+    "children": [
+      {
+        "id": "74eaf20d061fc80e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "201d639c30617514",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "91cc3f92b943e40e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "495762659a08099f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e44e1deca00638cd",
+    "type": "split",
+    "children": [
+      {
+        "id": "b8235c4105031a93",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dbb6f3ec9898b65d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "entities/lerobot.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "lerobot 的反向链接列表"
+            }
+          },
+          {
+            "id": "e109a062e5e993bf",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "entities/lerobot.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "lerobot 的出链列表"
+            }
+          },
+          {
+            "id": "b4e49dd649512b29",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "a0165bc2ecfccd90",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "b8e6a1ed3aba0f74",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "entities/lerobot.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "lerobot 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false
+    }
+  },
+  "active": "201d639c30617514",
+  "lastOpenFiles": [
+    "entities/so101-baudrate-issue.md",
+    "entities/stable-diffusion.md",
+    "entities/so101.md",
+    "entities/smolvla.md",
+    "entities/rt-2.md",
+    "entities/openvla.md",
+    "entities/lerobot.md",
+    "concepts/vla.md",
+    "concepts/transformer-architecture.md",
+    "concepts/self-attention.md",
+    "concepts/rnn-lstm.md",
+    "concepts/imitation-learning.md",
+    "concepts/diffusion-models.md",
+    "concepts/flow-matching.md",
+    "concepts/cnn.md"
+  ]
+}
